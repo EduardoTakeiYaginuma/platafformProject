@@ -25,9 +25,20 @@ spring:
             - Path=/auth/**
 
         - id: exchange
-          uri: http://exchange:80
+          uri: http://exchange:8080
           predicates:
-            - Path=/exchange/**
+            - Path=/coin/**
+
+        - id: product
+          uri: http://product:8080
+          predicates:
+            - Path=/product/**
+
+        - id: order
+          uri: http://order:8080
+          predicates:
+            - Path=/order/**
+
 
 logging:
   level:

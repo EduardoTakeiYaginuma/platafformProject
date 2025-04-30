@@ -1,10 +1,14 @@
-package store.account;
+package store.order;
+
 import lombok.Builder;
 import lombok.experimental.Accessors;
 
 @Builder @Accessors(fluent = true)
-public record AccountIn(
+public record ProductDTO (
+
+    String id,
     String name,
-    String email,
-    String password
+    String unit,
+    Double price
+    
 ) {}

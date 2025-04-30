@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: product
+    name: order
 
   jackson:
     serialization:
@@ -19,10 +19,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        default_schema: product
+        default_schema: orders
 
   flyway:
-    schemas: product
+    schemas: orders
     baseline-on-migrate: true
 
     

@@ -1,10 +1,12 @@
-package store.account;
+package store.product;
 import lombok.Builder;
 import lombok.experimental.Accessors;
 
 @Builder @Accessors(fluent = true)
-public record AccountIn(
+public record ProductIn(
     String name,
-    String email,
-    String password
-) {}
+    String unit, 
+    double price
+) {
+    
+}
