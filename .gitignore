@@ -1,6 +1,6 @@
 site/
 env/
-.env/
+api/.env/
 .cache/
 .vscode/
 target/
