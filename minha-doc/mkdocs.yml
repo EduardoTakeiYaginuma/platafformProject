@@ -11,7 +11,7 @@ nav:
   - Devops:
     - Kubernetes: minikube_k8s_documentation.md
     - Jenkins: jenkins_pipeline_documentation.md
-    - BottleNeck: bottleneck.md
+    - BottleNeck: bottlenecks.md
 
 markdown_extensions:
   - admonition
