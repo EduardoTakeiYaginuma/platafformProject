@@ -20,3 +20,5 @@ spring:
   flyway:
     schemas: account
     baseline-on-migrate: true
+
+    

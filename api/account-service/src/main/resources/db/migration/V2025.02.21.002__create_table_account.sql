@@ -8,7 +8,3 @@ CREATE TABLE account (
     CONSTRAINT pk_account PRIMARY KEY (id_account)
 );
 
-CONSTRAINT fk_orders_account
-    FOREIGN KEY (id_account)
-    REFERENCES account(id_account)  -- ou REFERENCES account(id) se o PK lá for id
-    ON DELETE CASCADE    

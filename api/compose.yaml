@@ -71,7 +71,37 @@ services:
     ports:
       - 8080:8080
 
+  redis:
+    image: redis:7
+    restart: always
+    hostname: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - $VOLUME/redis:/data
+    
+
   # exchange:
   #   build:
   #     context: ./exchange-service
   #     dockerfile: Dockerfile
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    depends_on:
+      - order  # ou outro serviço que já expõe /actuator/prometheus
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+volumes:
+  grafana-storage:

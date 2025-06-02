@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import store.order.ItemIn;
 import store.order.ItemOut;
 import store.order.OrderIn;
@@ -15,7 +14,7 @@ import store.order.ItemOut2;
 import store.order.orderItem.OrderItemModel;
 import store.order.orderItem.OrderItemRepository;
 import store.product.ProductController;
-
+import org.springframework.cache.annotation.Cacheable;
 import store.product.ProductOut;
 
 @Service
@@ -29,6 +28,7 @@ public class OrderService {
 
     @Autowired
     private ProductController productController;
+
 
     public OrderOut create(OrderIn orderIn, String accountId) {
         List<ItemIn> items = orderIn.items();
@@ -85,7 +85,7 @@ public class OrderService {
     }
 
 
-
+    @Cacheable(value = "orders", key = "#accountId")
     public List<ItemOut2> findAll(String accountId) {
 
         // Este método precisa existir no seu OrderRepository
@@ -109,6 +109,8 @@ public class OrderService {
         return items;
     }
 
+
+    @Cacheable(value = "order", key = "#id + #accountId")
     public OrderOut findById(String id, String accountId) {
         OrderModel orderModel = OrderRepository.findById(id).get();
         if (orderModel == null || !orderModel.getAccountId().equals(accountId)) {
