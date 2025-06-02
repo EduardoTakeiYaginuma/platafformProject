@@ -1,0 +1,8 @@
+site/
+env/
+api/.env/
+.cache/
+.vscode/
+target/
+volume/
+__pycache__/

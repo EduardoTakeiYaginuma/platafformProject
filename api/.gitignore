@@ -1,5 +1,2 @@
-account/
-account-service/
-auth/
-auth-service/
+
 .env/
