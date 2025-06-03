@@ -1,12 +1,54 @@
-server:
-  port: 8080
+# auth-deployment.yaml
 
-spring:
-  application:
-    name: auth
+# =========================
+# 1) Deployment do Auth-Service
+# =========================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth                 # ← nome do Deployment (pode ser qualquer, mas “auth” fica consistente)
+  labels:
+    app: auth                # ← label usada pelo Service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: seuusuario/auth-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            # Se você precisar injetar o JWT_SECRET_KEY pelo env, por exemplo:
+            - name: JWT_SECRET_KEY
+              value: "yrBBgYlvJQeslzFlgX9MFZccToI2fjRFqualquercoisa"
+            # E aqui, caso precise das variáveis de conexão ao banco (ajuste conforme seu banco):
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/seuBanco
+            - name: SPRING_DATASOURCE_USERNAME
+              value: seuUsuario
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: suaSenha
 
-
-store:
-  jwt:
-    issuer: Insper
-    secretKey: ${JWT_SECRET_KEY:yrBBgYlvJQeslzFlgX9MFZccToI2fjRFqualquercoisa}
+---
+# =========================
+# 2) Service para expor o Auth-Service dentro do cluster
+# =========================
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth                 # ← este nome deve bater com "uri: http://auth:8080" no Gateway
+spec:
+  selector:
+    app: auth                # ← corresponde ao label do Deployment acima
+  ports:
+    - port: 8080             # porta que o Service vai expor dentro do cluster
+      targetPort: 8080       # porta onde o container está ouvindo
+      protocol: TCP

@@ -13,44 +13,46 @@ spec:
         app: gateway
     spec:
       containers:
-          - name: gateway
-            image: 'eduyaginuma/gateway:latest'
-            imagePullPolicy: IfNotPresent
-            ports:
-              - containerPort: 8080
-            env:
-              - name: DATABASE_HOST
-                valueFrom:
-                  configMapKeyRef:
-                    name: postgres-configmap
-                    key: POSTGRES_HOST
-
-              - name: DATABASE_USER
-                valueFrom:
-                  secretKeyRef:
-                    name: postgres-secrets
-                    key: POSTGRES_USER
-
-              - name: DATABASE_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: postgres-secrets
-                    key: POSTGRES_PASSWORD
-
-
+        - name: gateway
+          image: eduyaginuma/gateway:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          # --> NOVO: reservas e limites de CPU / memória
+          resources:
+            requests:
+              cpu: "100m"        # 0,1 vCPU reservado
+              memory: "128Mi"
+            limits:
+              cpu: "500m"        # até 0,5 vCPU
+              memory: "512Mi"
+          env:
+            - name: DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: POSTGRES_HOST
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: POSTGRES_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: POSTGRES_PASSWORD
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
-    name: gateway
-    labels:
-        app: gateway
+  name: gateway
+  labels:
+    app: gateway
 spec:
-    type: LoadBalancer
-    ports:
-        - port: 8080
-    selector:
-        app: gateway
-
-  
+  type: LoadBalancer          # <- mude de ClusterIP para LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: gateway
